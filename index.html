@@ -92,7 +92,7 @@
               <div class="card-body">
                 <h5 class="card-title">Grand Theft Auto V</h5>
                 <p class="card-text">Grand Theft Auto is an action-adventure video game series created by David Jones and Mike Dailly.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <a href="https://store.steampowered.com/agecheck/app/271590/" class="btn btn-primary" target="_blank">Go Play</a>
               </div>
             </div>
           </div>
@@ -102,7 +102,7 @@
               <div class="card-body">
                 <h5 class="card-title">Card title</h5>
                 <p class="card-text">CODM is a free-to-play first-person shooter video game developed by Timi Studio, and published by Activision and Garena for the Android and iOS platforms.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <a href="https://play.google.com/store/apps/details?id=com.garena.game.codm&hl=id&pli=1" class="btn btn-primary" target="_blank">Go Play</a>
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@
               <div class="card-body">
                 <h5 class="card-title">Card title</h5>
                 <p class="card-text">The Last of Us is an action-horror survival adventure video game developed by Naughty Dog and published by Sony Computer Entertainment.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <a href="https://store.steampowered.com/agecheck/app/1888930/" class="btn btn-primary" target="_blank">Go Play</a>
               </div>
             </div>
           </div>
@@ -138,21 +138,31 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-7">
-            <form>
+            <!-- alert -->
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Success !</strong> Pesan Anda berhasil dikirim.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <!-- end alert -->
+            <form name="submit-to-google-sheet">
               <div class="mb-3">
                 <label for="name" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Input your name" />
+                <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Masukkan nama" name="nama" />
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Input email" />
+                <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Masukkan email" name="email" />
               </div>
               <div class="mb-3">
                 <label for="pesan" class="form-label">Pesan</label>
-                <textarea class="form-control" id="pesan" rows="3" placeholder="Tulis Pesan"></textarea>
+                <textarea class="form-control" id="pesan" rows="3" placeholder="Tulis Pesan" name="pesan"></textarea>
               </div>
 
-              <button type="submit" class="btn btn-primary">Kirim</button>
+              <button type="submit" class="btn btn-primary btn-kirim">Kirim</button>
+              <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span role="status">Loading...</span>
+              </button>
             </form>
           </div>
         </div>
@@ -175,5 +185,27 @@
     </footer>
     <!-- end footer -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbz6ZUsukMBTEUNmW2i9HFAt3Aj3WEBNFCyIbWmyyqh6kHKiJFhKu6YB_Y8QSxeZsgY/exec";
+      const form = document.forms["submit-to-google-sheet"];
+      const btnKirim = document.querySelector(".btn-kirim");
+      const btnLoading = document.querySelector(".btn-loading");
+      const myAlert = document.querySelector(".my-alert");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        btnLoading.classList.toggle("d-none");
+        btnKirim.classList.toggle("d-none");
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            btnLoading.classList.toggle("d-none");
+            btnKirim.classList.toggle("d-none");
+            myAlert.classList.toggle("d-none");
+            form.reset();
+            console.log("Success!", response);
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
